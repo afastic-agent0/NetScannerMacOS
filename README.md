@@ -42,7 +42,9 @@ Run the scanner:
 ./netscanner
 ```
 
-## ⚠️ Operational Constraints (Development Note)
-**IMPORTANT**: This tool is optimized for "Fast-Scan" mode. To prevent session timeouts in restricted environments, it currently focuses on targeted IP probes. Expanding to large CIDR ranges (e.g., `/24`) requires implementing asynchronous batching logic to avoid exceeding execution time limits.
+## 🛡️ Security & Auditing
 
-***
+The security of our network probes is a top priority. A recent security audit has identified several areas for improvement in the codebase.
+
+**[View the detailed Security Vulnerability Report here](./docs/SECURITY_VULNERABILITIES.md)**
+
