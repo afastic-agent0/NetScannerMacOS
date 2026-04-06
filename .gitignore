@@ -1,0 +1,20 @@
+# NetScannerMacOS - Git Ignore
+
+# Build directories
+build/
+bin/
+out/
+
+# macOS system files
+.DS_Store
+
+# Logs and reports
+*.log
+*.json
+scan_results.json
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
