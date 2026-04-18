@@ -10,20 +10,22 @@ A high-performance network scanner optimized for macOS (Apple Silicon/Intel), de
 - **Build System:** CMake
 
 ## System Architecture
-The application will follow a modular design:
+The application follows a modular design:
 - **Scanner Engine:** Core logic for ARP/ICMP scanning and TCP SYN probing.
-- **Discovery Module:** Handles network interface detection using macOS-specific APIs.
-0- **Reporter:** Formats scan results into human-readable console output or JSON.
+- **Discovery Module:** Handles network interface detection using macOS-improved APIs.
+- **ARP Scanner Module:** Dedicated module for low-level ARP request/reply analysis.
+- **Reporter:** Formats scan results into human-readable console output or JSON.
 
 ## Data Flow (Mermaid)
 ```mermaid
 graph TD
     A[User Command] --> B[Scanner Engine]
-    B --> C[Network Interface Discovery]
-    C --> D[ARP/ICMP Probing]
-    D --> E[TCP Port Scanning]
-    E --> F[Result Formatter]
-    F --> G[Console/JSON Output]
+    B --> C[Discovery Module]
+    C --> D[Network Interface Discovery]
+    D --> E[ARP/ICMP Probing]
+    E --> F[TCP Port Scanning]
+    F --> G[Result Formatter]
+    G --> H[Console/JSON Output]
 ```
 
 ## File Structure
@@ -33,10 +35,16 @@ NetScannerMacOS/
 ├── src/
 │   ├── main.cpp
 │   ├── scanner.cpp
-│   └── discovery.cpp
+│   ├── discovery.cpp
+│   ├── reporter.cpp
+│   ├── logger.cpp
+│   └── arp_scanner.cpp
 ├── include/
 │   ├── scanner.hpp
-│   └── discovery.hpp
+│   ├── discovery.hpp
+│   ├── reporter.hpp
+│   ├── logger.hpp
+│   └── arp_scanner.hpp
 ├── tests/
 │   └── test_scanner.cpp
 └── README.md

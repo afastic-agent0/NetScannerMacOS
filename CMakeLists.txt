@@ -10,8 +10,9 @@ set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/opt/homebrew/Cellar/libpcap/1.1
 pkg_check_modules(PCAP REQUIRED libpcap)
 
 add_executable(netscanner 
-    src/main.cpp 
+    src/arp_scanner.cpp
     src/discovery.cpp 
+    src/main.cpp 
     src/scanner.cpp 
     src/reporter.cpp 
     src/logger.cpp

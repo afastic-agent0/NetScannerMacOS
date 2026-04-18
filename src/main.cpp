@@ -19,7 +19,7 @@ int main() {
 
     std::cout << "[Main] Starting scan for: " << target << " (Ports: " << min_p << "-" << max_p << ")" << std::endl;
     
-    auto results = scanner.scan_subnet(target, min_p, max_p);
+    auto results = scanner.scan_subnet(target, SCAN_MODE_TCP, min_p, max_p);
     reporter.print_console(results);
     reporter.save_json("scan_results.json", results);
 

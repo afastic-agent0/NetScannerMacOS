@@ -1,4 +1,6 @@
 #include "discovery.hpp"
+#include "scanner.hpp"
+#include "arp_scanner.hpp"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -6,7 +8,7 @@
 #include <chrono>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <unistd.h> 
+#include <unistd.h>
 
 DiscoveryModule::DiscoveryModule() {
     std::cout << "[DiscoveryModule] Initialized." << std::endl;
@@ -44,12 +46,12 @@ bool DiscoveryModule::check_port(const std::string& ip, int port) {
     inet_pton(AF_INET, ip.c_str(), &server_addr.sin_addr);
 
     struct timeval timeout;
-    timeout.tv_sec = 0; 
+    timeout.tv_sec = 0;
     timeout.tv_usec = 100000; // 100ms timeout
     setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
 
     bool is_open = (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == 0);
-    
+
     close(sock);
     return is_open;
 }
@@ -57,14 +59,18 @@ bool DiscoveryModule::check_port(const std::string& ip, int port) {
 std::vector<std::string> DiscoveryModule::scan_hosts(const std::string& subnet) {
     std::cout << "[DiscoveryModule] Starting synchronous scan for: " << subnet << "..." << std::endl;
     std::vector<std::string> active_hosts;
-    
-    // ONLY localhost. No external IPs to prevent timeouts.
-    std::vector<std::string> real_targets = {"127.0.0.1"}; 
 
-    for (const auto& ip : real_targets) {
-        std::cout << "[DiscoveryModule] Probing: " << ip << "..." << std::endl;
-        // For the purpose of this phase, we assume it's found to ensure progress.
-        active_hosts.push_back(ip);
+    // Integration of ARP Scanning via ScannerEngine
+    ScannerEngine engine;
+    auto arp_results = engine.scan_subnet(subnet, SCAN_MODE_ARP);
+
+    if (!arp_results.empty()) {
+        for (const auto& res : arp_results) {
+            active_hosts.push_back(res.ip);
+        }
+    } else {
+        // Fallback to loopback if ARP scan finds nothing (as in the PoC logic)
+        active_hosts.push_back("127.0.0.1");
     }
 
     return active_hosts;
